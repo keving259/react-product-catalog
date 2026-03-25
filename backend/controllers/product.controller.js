@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import Product from "../models/product.model.js";
 
-export const getProducts = async (req, res) => { // Now is not necesary to put the URL /api/products
+export const getProducts = async (req, res) => {
     try {
         const products = await Product.find({}); // If you pass an empty object, it means it will fetch all of the products in the database
         res.status(200).json({ sucess: true, data: products});
