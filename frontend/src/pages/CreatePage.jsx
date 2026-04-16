@@ -1,4 +1,3 @@
-// 1:20
 import { Box, Container, VStack, Heading, useColorModeValue, Input, Button, useToast } from "@chakra-ui/react";
 import { useState } from "react";
 import { useProductStore } from "../store/product";
@@ -8,6 +7,7 @@ const CreatePage = () => {
     name:'',
     price:'',
     image:'',
+    stock:''
   });
   const toast = useToast()
   const {createProduct} = useProductStore();
@@ -31,7 +31,7 @@ const CreatePage = () => {
         isClosable:true
       });
     }
-    setNewProduct({ name:'', price:'', image:''});
+    setNewProduct({ name:'', price:'', image:'', stock:'' });
   };
 
   return <Container maxW={'container.sm'}>
@@ -65,6 +65,13 @@ const CreatePage = () => {
             name="image"
             value={newProduct.image}
             onChange={(e) => setNewProduct({ ...newProduct, image: e.target.value})}
+          />
+          <Input 
+            placeholder="Stock" 
+            name="stock"
+            type="number"
+            value={newProduct.stock}
+            onChange={(e) => setNewProduct({ ...newProduct, stock: Number(e.target.value) })}
           />
           <Button colorScheme='blue' onClick={handleAddProduct} w='full'>
             Add Product

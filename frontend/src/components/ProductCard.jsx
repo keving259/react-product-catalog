@@ -1,4 +1,4 @@
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, Badge } from "@chakra-ui/icons";
 import {
 	Box,
 	Button,
@@ -88,7 +88,13 @@ const ProductCard = ({product}) => {
 			bg={bg}
         >
 
-            <Image src={product.image} alt={product.name} h={48} w='full' objectFit='cover' />
+            <Image 
+				src={product.image}
+				alt={product.name}
+				h={48} w='full'
+				objectFit='cover'
+				filter={product.stock === 0 ? 'grayscale(100%) opacity(70%)' : 'none'}
+			/>
 
             <Box p={4}>
                 <Heading as='h3' size='md' mb={2}>
@@ -98,6 +104,16 @@ const ProductCard = ({product}) => {
                 <Text fontWeight='bold' fontSize='xl' color={textColor} mb={4}>
 					${product.price}
 				</Text>
+
+				<Box mb={4}>
+					{product.stock > 0 ? (
+						<Badge colorScheme='green' fontSize='0.8em' px={2} py={1} borderRadius='md'>
+							In Stock: {product.stock}
+						</Badge>
+					) : (
+						<Badge colorScheme='red' fontSize='0.8em' px={2} py={1} borderRadius='md'>Out of Stock</Badge>
+					)}
+				</Box>
 
                 <HStack spacing={2}>
 					<IconButton icon={<EditIcon />}
@@ -130,6 +146,10 @@ const ProductCard = ({product}) => {
 								<Input placeholder="Image URL" name='image' 
 									value={updatedProduct.image}
 									onChange={(e) => setUpdatedProduct({ ...updatedProduct, image: e.target.value })}
+								/>
+								<Input placeholder="Stock" name='stock' type="number"
+									value={updatedProduct.stock}
+									onChange={(e) => setUpdatedProduct({ ...updatedProduct, stock: Number(e.target.value) })}
 								/>
 							</VStack>
 						</ModalBody>

@@ -12,6 +12,11 @@ const productSchema = new mongoose.Schema({
     image: {
         type: String,
         requiered: true
+    },
+    stock: {
+        type: Number,
+        requiered: true,
+        default: 0
     }
 }, {
     timestamps: true
