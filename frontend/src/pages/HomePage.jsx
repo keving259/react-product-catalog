@@ -1,16 +1,21 @@
-import { Container, VStack, Text, SimpleGrid } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { Container, VStack, Text, SimpleGrid, Input } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { useProductStore } from '../store/product';
 import ProductCard from "../components/ProductCard";
 
 const HomePage = () => {
   const {fetchProducts, products} = useProductStore();
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
   console.log('products', products);
+
+  const filterProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchTerm.toLowerCase())
+);
 
   return (
     <Container maxW='container.xl' py={12}>
@@ -25,6 +30,14 @@ const HomePage = () => {
             Current Products 🚀
         </Text>
 
+        <Input
+          placeholder='Search products...'
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          maxW='md'
+          mb={6}
+        />
+
         <SimpleGrid
           columns={{
             base : 1,
@@ -34,12 +47,12 @@ const HomePage = () => {
           spacing={10}
           w={'full'}
         >
-          {products.map((product) => (
+          {filterProducts.map((product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </SimpleGrid>
 
-        {products.length == 0 && (
+        {filterProducts.length == 0 && (
           <Text fontSize='xl' textAlign={"center"} fontWeight='bold' color='gray.500'>
 					No products found 😢{" "}
 					<Link to={"/create"}>
