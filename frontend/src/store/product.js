@@ -1,7 +1,8 @@
 import {create} from 'zustand';
 
-export const useProductStore = create((set) => ({ // Using {} transforms it into an object
+export const useProductStore = create((set) => ({
     products: [],
+    hasMore: true,
     setProducts: (products) => set({ products }),
     createProduct: async(newProduct) => {
         if(!newProduct.name || !newProduct.image || !newProduct.price) {
@@ -18,10 +19,27 @@ export const useProductStore = create((set) => ({ // Using {} transforms it into
         set((state) => ({products:[...state.products, data.data]}));
         return { success:true, message:"Product created successfully."};
     },
-    fetchProducts: async () => {
-        const res = await fetch('api/products');
+    fetchProducts: async (filters = {}) => {
+        const { page = 1, search = '', sort = 'newest', minPrice = '', maxPrice = '', onlyStock = false } = filters;
+
+        const params = new URLSearchParams({
+            page,
+            limit: 6,
+            search,
+            sort,
+            minPrice,
+            maxPrice,
+            onlyStock,
+        });
+
+        const res = await fetch(`/api/products?${params.toString()}`);
         const data = await res.json();
-        set({ products: data.data });
+
+        set((state) => ({
+            products: page === 1 ? data.data : [...state.products, ...data.data],
+            hasMore: page < data.totalPages,
+        })
+        )
     },
     deleteProduct: async (pid) => {
         const res = await fetch(`api/products/${pid}`, {

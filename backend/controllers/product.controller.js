@@ -3,11 +3,46 @@ import Product from "../models/product.model.js";
 
 export const getProducts = async (req, res) => {
     try {
-        const products = await Product.find({}); // If you pass an empty object, it means it will fetch all of the products in the database
-        res.status(200).json({ sucess: true, data: products});
+        const { 
+            page = 1, 
+            limit = 6, 
+            search = '',
+            sort = 'newest',
+            minPrice,
+            maxPrice,
+            onlyStock
+        } = req.query;
+
+        let query = {};
+
+        if (search) query.name = { $regex: search, $options: 'i' };
+
+        if (minPrice || maxPrice) {
+            query.price = {};
+            if (minPrice) query.price.$gte = Number(minPrice);
+            if (maxPrice) query.price.$lte = Number(maxPrice);
+        }
+
+        if (onlyStock === 'true') query.stock = { $gt: 0 };
+
+        let sortOption = {};
+        if (sort === 'priceAsc') sortOption.price = 1;
+        else if (sort === 'priceDesc') sortOption.price = -1;
+        else sortOption.createdAt = -1;
+        const products = await Product.find(query)
+            .sort(sortOption)
+            .skip((page - 1) * limit)
+            .limit(Number(limit));
+        
+        const total = await Product.countDocuments(query);
+
+        res.status(200).json({ 
+            success: true, 
+            data: products, 
+            totalPages: Math.ceil(total / limit)
+        });
     } catch (error) {
-        console.log("error in fetching products", error.message);
-        res.status(500).json({ success: false, message: "Server Error" }) // Server error
+        res.status(500).json({ success: false, message: error.message });
     }
 };
 
