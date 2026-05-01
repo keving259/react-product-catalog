@@ -49,16 +49,28 @@ const HomePage = () => {
       <Container maxW='container.xl' py={12}>
         <VStack spacing={8}>
           <Text
-            fontSize={30}
-            fontWeight={"bold"}
-            textAlign={"center"}
+            fontSize={{ base: '2xl', md: '4xl' }}
+            fontWeight="extrabold"
+            textAlign="center"
             bgGradient={"linear(to-r, cyan.400, blue.500)"}
             bgClip={"text"}
           >
-            Current Products 🚀
+            Current Products
           </Text>
 
-          <Flex w={'full'} gap={4} wrap={'wrap'} bg='gray.800' p={4} borderRadius='md' alignItems='center'>
+          <Flex
+            w={'full'} 
+            gap={4}
+            wrap={'wrap'}
+            bg='whiteAlpha.100'
+            backdropFilter='blur(10px)'
+            border='1px solid'
+            borderColor='whiteAlpha.200'
+            p={5} 
+            borderRadius='xl' 
+            alignItems='center'
+            boxShadow='lg'
+          >
             <Input
               placeholder='Search products...'
               value={searchTerm}
@@ -162,7 +174,7 @@ const HomePage = () => {
         {hasMore && ( products.length > 0) && (
           <Button
             mt={8}
-            colorScheme='blue'
+            colorScheme='cyan'
             onClick={() => setPage(page + 1)}
           >
             Load More

@@ -83,9 +83,15 @@ const ProductCard = ({product}) => {
             shadow='lg'
 			rounded='lg'
 			overflow='hidden'
-			transition='all 0.3s'
-			_hover={{ transform: "translateY(-5px)", shadow: "xl" }}
+			_hover={{
+				transform: "translateY(-5px)",
+				boxShadow: "2xl",
+				shadow: "xl",
+				borderColor: "cyan.400",
+			}}
 			bg={bg}
+			borderRadius='2xl'
+			transition='all 0.3s ease'
         >
 
             <Image 
@@ -118,7 +124,7 @@ const ProductCard = ({product}) => {
                 <HStack spacing={2}>
 					<IconButton icon={<EditIcon />}
 						onClick={onOpen}
-						colorScheme="blue" />
+						colorScheme="cyan" />
 					<IconButton
 						icon={<DeleteIcon />}
 						onClick={() => handleDeleteProduct(product._id)}
@@ -156,7 +162,7 @@ const ProductCard = ({product}) => {
 
 						<ModalFooter>
 						<Button
-							colorScheme='blue'
+							colorScheme='cyan'
 							mr={3}
 							onClick={() => handleUpdateProduct(product._id, updatedProduct)}
 						>
